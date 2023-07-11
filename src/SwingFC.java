@@ -1,6 +1,7 @@
 /*
     Try this 17-1
     A Swing-based file comparison utility.
+    This version has a check box that shows location of first mismatch.
  */
 
 import java.awt.*;
@@ -14,11 +15,10 @@ public class SwingFC implements ActionListener {
     JTextField jtfSecond;  // holds the second filename.
 
     JButton jbtnComp;  // button to compare the files.
-    JCheckBox jcbPos;
+    JCheckBox jcbPos;  // check to display location of mismatch.
 
     JLabel jlabFirst, jlabSecond;  // displays prompts.
     JLabel jlabResults, jlabLocation;  // displays results and error messages.
-    int counter;
     String s;
 
     SwingFC() {
@@ -66,7 +66,7 @@ public class SwingFC implements ActionListener {
         jfrm.add(jcbPos);
         jfrm.add(jbtnComp);
         jfrm.add(jlabResults);
-        jfrm.add(jlabLocation);
+//        jfrm.add(jlabLocation);
 
         // Display the frame.
         jfrm.setVisible(true);
@@ -74,7 +74,7 @@ public class SwingFC implements ActionListener {
 
     // Compare files when Compare button is pressed.
     public void actionPerformed(ActionEvent ae) {
-        int i=0, j=0;
+        int i=0, j=0, counter;
 
         if(ae.getActionCommand().equals("Compare")) {
             // First, confirm that both filenames have been entered.
@@ -93,12 +93,13 @@ public class SwingFC implements ActionListener {
                 // Check contents of each file.
                 counter = 0;
                 do {
-                    counter++;
                     i = f1.read();
                     j = f2.read();
                     if (i != j) break;
+                    counter++;
                 } while (i != -1 && j != -1);
-
+/*
+My version:
                 if (i != j) {
                     jlabResults.setText("Files are not the same.");
                     if (jcbPos.isSelected())
@@ -110,6 +111,16 @@ public class SwingFC implements ActionListener {
                     jlabResults.setText("Files are the same.");
                     jlabLocation.setText("");
                 }
+ */
+                if (i != j) {
+                    if (jcbPos.isSelected())
+                        jlabResults.setText("Files differ at location " + counter);
+                    else
+                        jlabResults.setText("Files are not the same.");
+                }
+                else
+                    jlabResults.setText("Files are the same.");
+
             } catch (IOException exc) {
                 jlabResults.setText("File Error");
             }
